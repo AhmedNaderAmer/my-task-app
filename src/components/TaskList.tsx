@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import Task from "./Task";
 
-type Task = {
+type TaskType = {
   id: number;
   description: string;
   status: "Not Started" | "In Progress" | "Finished";
 };
 
 type TaskListProps = {
-  tasks: Task[];
+  tasks: TaskType[];
   onEditTask: (id: number) => void;
   onDeleteTask: (id: number) => void;
 };

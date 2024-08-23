@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("password");
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    // Simple validation for demonstration
     if (username === "admin" && password === "password") {
       navigate("/tasks");
     } else {

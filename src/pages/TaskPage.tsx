@@ -14,11 +14,11 @@ const TaskPage: React.FC = () => {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterText, setFilterText] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const tasksPerPage = 4;
 
   useEffect(() => {
-    // Load tasks from cache
     const cachedTasks = localStorage.getItem('tasks');
     if (cachedTasks) {
       setTasks(JSON.parse(cachedTasks));
@@ -26,7 +26,6 @@ const TaskPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Cache tasks whenever they change
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
 
@@ -58,19 +57,31 @@ const TaskPage: React.FC = () => {
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterText(e.target.value);
-    setCurrentPage(1); // Reset to first page when filtering
+    setCurrentPage(1);
+  };
+
+  const handleStatusFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusFilter(e.target.value);
+    setCurrentPage(1);
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value as 'asc' | 'desc');
   };
 
-  // Filter tasks by description or status
-  const filteredTasks = tasks.filter(
-    (task) =>
-      task.description.toLowerCase().includes(filterText.toLowerCase()) ||
-      task.status.toLowerCase().includes(filterText.toLowerCase())
-  );
+  const handleResetFilters = () => {
+    setFilterText('');
+    setStatusFilter('');
+    setSortOrder('asc');
+    setCurrentPage(1);
+  };
+
+  // Filter tasks by description and status
+  const filteredTasks = tasks.filter((task) => {
+    const matchesDescription = task.description.toLowerCase().includes(filterText.toLowerCase());
+    const matchesStatus = statusFilter ? task.status === statusFilter : true;
+    return matchesDescription && matchesStatus;
+  });
 
   // Sort tasks by description
   const sortedTasks = filteredTasks.sort((a, b) => {
@@ -93,17 +104,24 @@ const TaskPage: React.FC = () => {
       />
 
       {/* Filter and Sort Controls */}
-      <div  className="task-form">
+      <div className="task-form">
         <input
           type="text"
-          placeholder="Filter by description or status"
+          placeholder="Filter by description"
           value={filterText}
           onChange={handleFilterChange}
         />
-        <select value={sortOrder} onChange={handleSortChange}>
+        <select className="custom-select" value={statusFilter} onChange={handleStatusFilterChange}>
+          <option value="">All Statuses</option>
+          <option value="Not Started">Not Started</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Finished">Finished</option>
+        </select>
+        <select className="custom-select" value={sortOrder} onChange={handleSortChange}>
           <option value="asc">Sort: A-Z</option>
           <option value="desc">Sort: Z-A</option>
         </select>
+        <button className="button" onClick={handleResetFilters}>Reset Filters</button>
       </div>
 
       <TaskList

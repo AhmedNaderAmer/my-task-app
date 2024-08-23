@@ -51,13 +51,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <select value={status} onChange={(e) => setStatus(e.target.value as any)}>
+      <select className="custom-select" value={status} onChange={(e) => setStatus(e.target.value as any)}>
         <option value="Not Started">Not Started</option>
         <option value="In Progress">In Progress</option>
         <option value="Finished">Finished</option>
       </select>
-      <button onClick={handleSubmit}>{task ? "Update" : "Add"}</button>
-      <button onClick={onCancel}>Cancel</button>
+      <button className="button"onClick={handleSubmit}>{task ? "Update" : "Add"}</button>
+      <button className="button"onClick={onCancel}>Cancel</button>
     </div>
   );
 };
