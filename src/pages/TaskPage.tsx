@@ -16,7 +16,8 @@ const TaskPage: React.FC = () => {
   const [filterText, setFilterText] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const tasksPerPage = 4;
+  const [tasksPerPage, setTasksPerPage] = useState(10);
+  // const tasksPerPage = 4;
 
   useEffect(() => {
     const cachedTasks = localStorage.getItem('tasks');
@@ -53,6 +54,11 @@ const TaskPage: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleTasksPerPageChange = (newTasksPerPage: number) => {
+    setTasksPerPage(newTasksPerPage);
+    setCurrentPage(1); // Reset to first page when changing tasks per page
   };
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +140,7 @@ const TaskPage: React.FC = () => {
         tasksPerPage={tasksPerPage}
         currentPage={currentPage}
         onPageChange={handlePageChange}
+        onTasksPerPageChange={handleTasksPerPageChange}
       />
     </div>
   );
